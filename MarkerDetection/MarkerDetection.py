@@ -53,9 +53,9 @@ def main():
         print('2 : detect markers')
         selection = input()
 
-        if selection == 1:
-            Calibrate.Calibrate()
-        arucoDetect.detect()
+        #if selection == 1:
+         #   Calibrate.Calibrate()
+    arucoDetect.detect()
 
 if __name__ == "__main__":
     main()

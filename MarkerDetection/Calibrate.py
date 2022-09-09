@@ -21,38 +21,38 @@ class Calibrate:
         while good == False:
             print('Please enter the width of the checkerboard: ')
             width = input()
-            good = True
             if not width.isnumeric():
                 print('Error: Please enter a number')
                 continue
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
+            good = True
 
 
         good = False
         while good == False:
             print('Please enter the height of the checkerboard: ')
             height = input()
-            good = True
             if not width.isnumeric():
                 print('Error: Please enter a number')
                 continue
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
+            good = True
        
         good = False
         while good == False:
             print('Please enter the size of the squares: ')
             square_size = input()
-            good = True
             if not width.isnumeric():
                 print('Error: Please enter a number')
                 continue
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
+            good = True
     
         # 2.4 cm == 0.024 m
         # square_size = 0.024
@@ -61,13 +61,13 @@ class Calibrate:
         while good == False:
             print('visualise? True or False: ')
             visualize = input()
-            good = True
             if not width.isnumeric():
                 print('Error: Please enter a number')
                 continue
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
+            good = True
 
         if visualize.lower() == "true":
             visualize = True
