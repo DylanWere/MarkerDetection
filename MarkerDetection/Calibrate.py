@@ -19,11 +19,7 @@ class Calibrate:
         
         good = False
         while good == False:
-            print('Please enter the width of the checkerboard: ')
-            width = input()
-            if not width.isnumeric():
-                print('Error: Please enter a number')
-                continue
+            width = int(input('Please enter the width of the checkerboard: '))
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
@@ -32,11 +28,7 @@ class Calibrate:
 
         good = False
         while good == False:
-            print('Please enter the height of the checkerboard: ')
-            height = input()
-            if not width.isnumeric():
-                print('Error: Please enter a number')
-                continue
+            height = int(input('Please enter the height of the checkerboard: '))
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
@@ -44,11 +36,7 @@ class Calibrate:
        
         good = False
         while good == False:
-            print('Please enter the size of the squares: ')
-            square_size = input()
-            if not width.isnumeric():
-                print('Error: Please enter a number')
-                continue
+            square_size = float(input('Please enter the size of the squares: '))
             if width <= 0:
                 print('Error: Please enter a positive number')
                 continue
@@ -61,12 +49,10 @@ class Calibrate:
         while good == False:
             print('visualise? True or False: ')
             visualize = input()
-            if not width.isnumeric():
-                print('Error: Please enter a number')
+            if not (visualize  == "True" or visualize == "False"):
+                print('Error: Please enter True or False')
                 continue
-            if width <= 0:
-                print('Error: Please enter a positive number')
-                continue
+            
             good = True
 
         if visualize.lower() == "true":
@@ -74,7 +60,7 @@ class Calibrate:
         else:
             visualize = False
 
-        ret, mtx, dist, rvecs, tvecs = self.__calibrate(dirpath, square_size, visualize=visualize, width=width, height=height)
+        ret, mtx, dist, rvecs, tvecs = self.__calibrate(dirpath=dirpath, square_size=square_size, width=width, height=height, visualize=visualize)
 
         print(mtx)
         print(dist)
@@ -82,7 +68,7 @@ class Calibrate:
         np.save("calibration_matrix", mtx)
         np.save("distortion_coefficients", dist)
 
-    def __calibrate(dirpath, square_size, width, height, visualize=False):
+    def __calibrate(self, dirpath, square_size, width, height, visualize=False):
         """ Apply camera calibration operation for images in the given directory path. """
 
         # termination criteria
@@ -99,10 +85,14 @@ class Calibrate:
         imgpoints = []  # 2d points in image plane.
 
         images = os.listdir(dirpath)
+        print("here")
 
         for fname in images:
+            print("looping")
             img = cv.imread(os.path.join(dirpath, fname))
             gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+            cv.imshow('img',gray)
+            cv.waitKey(0)
 
             # Find the chess board corners
             ret, corners = cv.findChessboardCorners(gray, (width, height), None)
@@ -116,6 +106,8 @@ class Calibrate:
 
                 # Draw and display the corners
                 img = cv.drawChessboardCorners(img, (width, height), corners2, ret)
+                cv.imshow('img',img)
+                cv.waitKey(0)
 
             if visualize:
                 cv.imshow('img',img)

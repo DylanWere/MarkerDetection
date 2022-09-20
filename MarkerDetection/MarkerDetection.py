@@ -1,17 +1,15 @@
 import cv2 as cv
 import numpy as np
 import cv2.aruco as aruco
-import sys
-import copy
-import argparse
-from utils import ARUCO_DICT, aruco_display
-import Calibrate
+from utils import ARUCO_DICT, DEFAULTS_DICT, aruco_display
+from Calibrate import Calibrate
+from GenerateTags import GenerateTags
 
 
 
 class MarkerDetector:
     def __init__(self):
-        self.marker = aruco.getPredefinedDictionary(aruco.DICT_5X5_100)
+        self.marker = aruco.getPredefinedDictionary(DEFAULTS_DICT["DEFAULT_ARUCO_DICT"])
 
     def detect(self):
         #get a dictionary of what m,arkers are needed
@@ -46,16 +44,23 @@ class MarkerDetector:
 
 
 def main():
-    arucoDetect = MarkerDetector()
     while True:
         print('please choose a number')
         print('1 : Calibrate Camera')
-        print('2 : detect markers')
+        print('2 : Detect Markers')
+        print('3 : Generate Tags')
         selection = input()
+        selection = int(selection)
+        if selection == 1:
+            print(selection)
+            Calibrate()
+        if selection == 2:
+            arucoDetect = MarkerDetector()
+            arucoDetect.detect()
+        if selection == 3:
+            GenerateTags()
 
-        #if selection == 1:
-         #   Calibrate.Calibrate()
-    arucoDetect.detect()
+    
 
 if __name__ == "__main__":
     main()
