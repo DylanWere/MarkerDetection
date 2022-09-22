@@ -91,8 +91,6 @@ class Calibrate:
             print("looping")
             img = cv.imread(os.path.join(dirpath, fname))
             gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-            cv.imshow('img',gray)
-            cv.waitKey(0)
 
             # Find the chess board corners
             ret, corners = cv.findChessboardCorners(gray, (width, height), None)
