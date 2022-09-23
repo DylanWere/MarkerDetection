@@ -97,6 +97,7 @@ class Calibrate:
 
             # If found, add object points, image points (after refining them)
             if ret:
+                print("found")
                 objpoints.append(objp)
 
                 corners2 = cv.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
@@ -108,6 +109,7 @@ class Calibrate:
                 cv.waitKey(0)
 
             if visualize:
+                cv.namedWindow("output", cv.WINDOW_NORMAL)
                 cv.imshow('img',img)
                 cv.waitKey(0)
 
