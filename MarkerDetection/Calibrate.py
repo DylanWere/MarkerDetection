@@ -105,8 +105,7 @@ class Calibrate:
 
                 # Draw and display the corners
                 img = cv.drawChessboardCorners(img, (width, height), corners2, ret)
-                cv.imshow('img',img)
-                cv.waitKey(0)
+                
 
             if visualize:
                 cv.namedWindow("output", cv.WINDOW_NORMAL)
