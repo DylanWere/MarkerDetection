@@ -1,3 +1,4 @@
+from ast import Lambda
 import numpy as np
 import cv2 as cv
 import os
@@ -18,26 +19,29 @@ class Gui:
         self.state = self.navbarOptions["home"]
         self.window = tk.Tk()
         self.window.geometry("1200x800+0+0")
+        self.window.after(33,self.update)
+        self.mainDisplayFrame = tk.Frame()
         self.gui_navbar()
         self.draw_home()
         self.window.mainloop()
     
     def draw(self, tab):
-        if (self.state == 'home'):
-            self.homeFrame.forget()
-            self.homeFrame.destroy()
-        if (self.state == 'generate'):
-            self.generateFrame.forget()
-            self.generateFrame.destroy()
+        self.mainDisplayFrame.forget()
+        self.mainDisplayFrame.destroy()
+        
 
 
-        if(tab == 'home'):
+        if(tab == self.navbarOptions["home"]):
+            self.state = self.navbarOptions["home"]
             self.draw_home()
-        if(tab == 'generate'):
+        if(tab == self.navbarOptions["generate"]):
+            self.state = self.navbarOptions["generate"]
             self.draw_generate()
-        if (tab == 'calibrate'):
+        if (tab == self.navbarOptions["calibrate"]):
+            self.state = self.navbarOptions["calibrate"]
             self.draw_calibrate()
-        if (tab == 'detect'):
+        if (tab == self.navbarOptions["detect"]):
+            self.state = self.navbarOptions["detect"]
             self.draw_detect()
 
     def gui_navbar(self):
@@ -47,42 +51,50 @@ class Gui:
         topFrame.pack(
             side = "top",
             fill = tk.X)
-        for x in self.navbarOptions:
-            tk.Button(topFrame, text=self.navbarOptions[x], bg="gray85", fg="gray1", activebackground="gray99", activeforeground="gray50", command=self.draw(x) ).pack(side="left", fill=tk.X, ipadx=30, ipady=30, expand=True)
-
+        tk.Button(topFrame, text=self.navbarOptions["home"], bg="gray85", fg="gray1", activebackground="gray99", activeforeground="gray50", command= lambda: self.draw(self.navbarOptions["home"]) ).pack(side="left", fill=tk.X, ipadx=30, ipady=30, expand=True)
+        tk.Button(topFrame, text=self.navbarOptions["generate"], bg="gray85", fg="gray1", activebackground="gray99", activeforeground="gray50", command= lambda: self.draw(self.navbarOptions["generate"]) ).pack(side="left", fill=tk.X, ipadx=30, ipady=30, expand=True)
+        tk.Button(topFrame, text=self.navbarOptions["calibrate"], bg="gray85", fg="gray1", activebackground="gray99", activeforeground="gray50", command= lambda: self.draw(self.navbarOptions["calibrate"]) ).pack(side="left", fill=tk.X, ipadx=30, ipady=30, expand=True)
+        tk.Button(topFrame, text=self.navbarOptions["detect"], bg="gray85", fg="gray1", activebackground="gray99", activeforeground="gray50", command= lambda: self.draw(self.navbarOptions["detect"]) ).pack(side="left", fill=tk.X, ipadx=30, ipady=30, expand=True)
 
     def draw_home(self):
-        self.homeFrame = tk.Frame(
+        self.mainDisplayFrame = tk.Frame(
             master=self.window,
             width = 1200,
             height= 800,
             bg="gray50")
-        self.homeFrame.pack(side="top")
-        tk.Label(master=self.homeFrame, text=self.welcomeMessage, pady=50).pack()
-        tk.Label(master=self.homeFrame, text=self.genTagsMessage, pady=50).pack()
-        tk.Label(master=self.homeFrame, text=self.calibrateMessage, pady=50).pack()
-        tk.Label(master=self.homeFrame, text=self.detectPoseMessage, pady=50).pack()
+        self.mainDisplayFrame.pack(side="top")
+        tk.Label(master=self.mainDisplayFrame, text=self.welcomeMessage, pady=50).pack()
+        tk.Label(master=self.mainDisplayFrame, text=self.genTagsMessage, pady=50).pack()
+        tk.Label(master=self.mainDisplayFrame, text=self.calibrateMessage, pady=50).pack()
+        tk.Label(master=self.mainDisplayFrame, text=self.detectPoseMessage, pady=50).pack()
 
     def draw_generate(self):
-        self.generateFrame = tk.Frame(
+        self.mainDisplayFrame = tk.Frame(
             master=self.window,
             width = 1200,
             height= 800,
             bg="medium orchid")
+        self.mainDisplayFrame.pack()
 
     def draw_calibrate(self):
-        self.calibrateFrame = tk.Frame(
+        self.mainDisplayFrame = tk.Frame(
             master=self.window,
             width = 1200,
             height= 800,
             bg="dark olive green")
+        self.mainDisplayFrame.pack()
     
     def draw_detect(self):
-        self.detectFrame = tk.Frame(
+        self.mainDisplayFrame = tk.Frame(
             master=self.window,
             width = 1200,
             height= 800,
             bg="sienna1")
+        self.mainDisplayFrame.pack()
+
+    def update(self):
+        self.window.after(33,self.update)
+        self.window.update()
 
 
 
