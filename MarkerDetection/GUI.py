@@ -19,7 +19,7 @@ class Gui:
         self.state = self.navbarOptions["home"]
         self.window = tk.Tk()
         self.window.geometry("1200x800+0+0")
-        self.window.after(33,self.update)
+        #self.window.after(33,self.update)
         self.mainDisplayFrame = tk.Frame()
         self.gui_navbar()
         self.draw_home()
@@ -60,13 +60,13 @@ class Gui:
         self.mainDisplayFrame = tk.Frame(
             master=self.window,
             width = 1200,
-            height= 800,
-            bg="gray50")
+            height= 800,)
         self.mainDisplayFrame.pack(side="top")
-        tk.Label(master=self.mainDisplayFrame, text=self.welcomeMessage, pady=50).pack()
-        tk.Label(master=self.mainDisplayFrame, text=self.genTagsMessage, pady=50).pack()
-        tk.Label(master=self.mainDisplayFrame, text=self.calibrateMessage, pady=50).pack()
-        tk.Label(master=self.mainDisplayFrame, text=self.detectPoseMessage, pady=50).pack()
+        tk.Label(master=self.mainDisplayFrame, text=self.welcomeMessage, pady=10, padx=0).pack(anchor=tk.W, ipadx=0)
+        tk.Label(master=self.mainDisplayFrame, text=self.navbarOptions["generate"],font='TkDefaultFont 18 bold').pack(anchor=tk.W)
+        tk.Label(master=self.mainDisplayFrame, text=self.genTagsMessage, pady=10).pack(anchor=tk.W)
+        tk.Label(master=self.mainDisplayFrame, text=self.calibrateMessage, pady=10).pack(anchor=tk.W)
+        tk.Label(master=self.mainDisplayFrame, text=self.detectPoseMessage, pady=10).pack(anchor=tk.W)
 
     def draw_generate(self):
         self.mainDisplayFrame = tk.Frame(
@@ -92,9 +92,9 @@ class Gui:
             bg="sienna1")
         self.mainDisplayFrame.pack()
 
-    def update(self):
-        self.window.after(33,self.update)
-        self.window.update()
+    #def update(self):
+    #    self.window.after(33,self.update)
+    #    self.window.update()
 
 
 
