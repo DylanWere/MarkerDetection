@@ -13,6 +13,12 @@ from GenerateTags import GenerateTags
 
 class Gui:
 
+    displayHeight = 480
+    displayWidth = 640
+
+    defaultPadY = 30
+    defaultPadX = 10
+
     welcomeMessage = "Hi! welcome to group fourexplore's pose detection system read below to get started."
     genTagsMessage = "Generate tags will create a file which you can use to print out a tag, using this tag in the next stages will enable you to estimate\nthe pose of the tag in 3D space!"
     calibrateMessage = "This tab allows for our program to get a better understand of where your tag is in space, calibrating the camera is a necessary\nphase before you can continue to Detect Pose."
@@ -20,14 +26,17 @@ class Gui:
 
     navbarOptions = {"home":"Home", "camera" : "Camera Settings", "generate" : "Generate Markers", "calibrate" : "Calibrate", "detect" : "Detect Pose"}
 
-    txtBodyFormatting = 'TkDefaultFont 16'
-    txtHeadingFormatting = 'TkDefaultFont 18 bold'
+    txtBodyFormatting = 'TkDefaultFont 8'
+    txtHeadingFormatting = 'TkDefaultFont 10 bold'
+
+    resOptions = { "1: Standard 480p  [640, 480]" : [640 , 480], "2: High 720p  [1280, 720]" : [1280, 720], "3: Full HD 1080p [1920,1080])" : [1920,1080]}
+
 
 
     def __init__(self):
         self.state = self.navbarOptions["home"]
         self.window = Tk()
-        self.window.geometry("1200x800+0+0")
+        self.window.geometry("640x480+0+0")
         self.camSettingsRun = False
         self.getCamList()
         self.mainDisplayFrame = tk.Frame()
@@ -73,27 +82,27 @@ class Gui:
 
     def draw_home(self):
         self.mainDisplayFrame = tk.Frame(
-            master=self.window,
-            width = 1200,
-            height= 800,)
+            master= self.window,
+            width = self.displayWidth,
+            height= self.displayHeight)
         self.mainDisplayFrame.pack(side="top")
-        Label(master=self.mainDisplayFrame, text=self.welcomeMessage, pady=50,font=self.txtBodyFormatting).pack(anchor=tk.W)
+        Label(master=self.mainDisplayFrame, text=self.welcomeMessage, pady=self.defaultPadY,font=self.txtBodyFormatting).pack(anchor=tk.W)
         Label(master=self.mainDisplayFrame, text=self.navbarOptions["generate"], font=self.txtHeadingFormatting).pack(anchor=tk.W)
-        Label(master=self.mainDisplayFrame, text=self.genTagsMessage, pady=10, font=self.txtBodyFormatting, justify="left").pack(anchor=tk.W)
+        Label(master=self.mainDisplayFrame, text=self.genTagsMessage, pady=self.defaultPadY, font=self.txtBodyFormatting, justify="left").pack(anchor=tk.W)
         Label(master=self.mainDisplayFrame, text=self.navbarOptions["calibrate"], font=self.txtHeadingFormatting).pack(anchor=tk.W)
-        Label(master=self.mainDisplayFrame, text=self.calibrateMessage, pady=10, font=self.txtBodyFormatting, justify="left").pack(anchor=tk.W)
+        Label(master=self.mainDisplayFrame, text=self.calibrateMessage, pady=self.defaultPadY, font=self.txtBodyFormatting, justify="left").pack(anchor=tk.W)
         Label(master=self.mainDisplayFrame, text=self.navbarOptions["detect"], font=self.txtHeadingFormatting).pack(anchor=tk.W)
-        Label(master=self.mainDisplayFrame, text=self.detectPoseMessage, pady=10, font=self.txtBodyFormatting).pack(anchor=tk.W)
+        Label(master=self.mainDisplayFrame, text=self.detectPoseMessage, pady=self.defaultPadY, font=self.txtBodyFormatting).pack(anchor=tk.W)
 
     def draw_camera(self):
         self.mainDisplayFrame = tk.Frame(
             master=self.window,
-            width = 1200,
-            height= 800,)
+            width = self.displayWidth,
+            height= self.displayHeight)
         self.mainDisplayFrame.pack()
 
         #choose camera
-        Label(master=self.mainDisplayFrame, text='Please choose the camera you wish to use', pady=50,font=self.txtBodyFormatting).grid(column=0, row=0, ipadx=10)
+        Label(master=self.mainDisplayFrame, text='Please choose the camera you wish to use', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=0, ipadx=10)
 
 
         #create combobox of cameras
@@ -102,25 +111,29 @@ class Gui:
         self.camCB['values'] = [m for m in self.cameraList]
         self.camCB['state'] = 'readonly'
         self.camCB.set("Pick an Option")
-        self.camCB.bind("<<ComboboxSelected>>", self.setCam)
         self.camCB.grid(column=1, row=0, ipadx=10)
 
-        Label(master=self.mainDisplayFrame, text='Preview Camera:', pady=50,font=self.txtBodyFormatting).grid(column=0, row=1, ipadx=10)
+        Label(master=self.mainDisplayFrame, text='Preview Camera:', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=1, ipadx=10)
         #create button
         button = Button(master=self.mainDisplayFrame, text="...", activebackground="gray99", activeforeground="gray50", font=self.txtBodyFormatting, command=self.previewCamera )
         button.grid(column=1, row=1, ipadx=10)
 
-        Label(master=self.mainDisplayFrame, text='Camera Resolution:', pady=50,font=self.txtBodyFormatting).grid(column=0, row=2, ipadx=10)
+        Label(master=self.mainDisplayFrame, text='Camera Resolution:', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=2, ipadx=10)
         
         #create combobox of camera resolutions
-        resOptions = ["1: Standard 480p [ 640, 480]", "2: High 720p     [1280, 720]", "3: Full HD 1080p [1920,1080])"]
         camResolution = StringVar()
         self.resolutionCB = ttk.Combobox(self.mainDisplayFrame, textvariable=camResolution, width=20)
-        self.resolutionCB['values'] = [resOptions]
+        self.resolutionCB['values'] = [resOption for resOption in self.resOptions]
         self.resolutionCB['state'] = 'readonly'
         self.resolutionCB.set("Resolution Types")
-        self.resolutionCB.bind("<<ComboboxSelected>>", self.setCam)
         self.resolutionCB.grid(column=1, row=2, ipadx=10)
+
+        Label(master=self.mainDisplayFrame, text='Please enter the Frames Per Second (FPS):', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=3)
+
+        self.camFPS = Entry(master=self.mainDisplayFrame, width = 10)
+        self.camFPS.grid(column=1, row=3)
+
+        Button(master=self.mainDisplayFrame, text="Save", activebackground="gray99", activeforeground="gray50", font=self.txtBodyFormatting, command=self.setCam ).grid(column=2, row=4, padx=20)
 
         self.camSettingsRun = True
 
@@ -139,11 +152,37 @@ class Gui:
             cv.destroyAllWindows()
 
     def setCam(self):
+        self.camSettings = {}
+        error = False
+        errorMsg = ""
         if (self.camCB.get() == ""):
             self.camSet = False
+            error = True
+            errorMsg += "Camera not set \n"
         else:
-            self.camIndex = self.camCB.get()
-            self.camSet = True
+            self.camSettings["index"] = self.camCB.get()
+        if (self.resolutionCB.get() == ""):
+            error = True
+            errorMsg += "Resolution not set \n"
+        else:
+            self.camSettings["width"]= self.resOptions[self.resolutionCB.get()][0]
+            self.camSettings["height"]= self.resOptions[self.resolutionCB.get()][1]
+        try:
+            fps = int(self.camFPS.get())
+        except ValueError: 
+            error = True
+            errorMsg += "Camera FPS not set \n"
+        else: 
+            if fps <= 0:
+                error = True
+                errorMsg += "Camera FPS not positive \n"
+            else:
+                self.camSettings["fps"] = fps
+        if (error):
+            tk.messagebox.showerror(title="Camera Settings Error", message=errorMsg)
+        
+
+            
 
     def getCamList(self):
         #get a list of cameras
@@ -157,16 +196,16 @@ class Gui:
     def draw_generate(self):
         self.mainDisplayFrame = tk.Frame(
             master=self.window,
-            width = 1200,
-            height= 800,)
+            width = self.displayWidth,
+            height= self.displayHeight)
         self.mainDisplayFrame.pack()
 
 
-        Label(master=self.mainDisplayFrame, text='Please choose the directory where the ArUCo tag will be saved', pady=50,font=self.txtBodyFormatting).grid(column=0, row=0)
-        Button(master=self.mainDisplayFrame, text="...", activebackground="gray99", activeforeground="gray50", font=self.txtBodyFormatting, command=self.get_dirpath ).grid(column=1, row=0)
+        Label(master=self.mainDisplayFrame, text='Please choose the directory where the ArUCo tag will be saved', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=0)
+        Button(master=self.mainDisplayFrame, text="...", activebackground="gray99", activeforeground="gray50", font=self.txtBodyFormatting, command=self.get_tag_dirpath ).grid(column=1, row=0)
         
 
-        Label(master=self.mainDisplayFrame, text='Please enter the ARuCo Dictionary:', pady=50,font=self.txtBodyFormatting).grid(column=0, row=1)
+        Label(master=self.mainDisplayFrame, text='Please enter the ARuCo Dictionary:', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=1)
 
         chosenDict = StringVar()
         self.dictCB = ttk.Combobox(self.mainDisplayFrame, textvariable=chosenDict, width=20)
@@ -174,12 +213,12 @@ class Gui:
         self.dictCB['state'] = 'readonly'
         self.dictCB.grid(column=1, row=1, ipadx=10)
 
-        Label(master=self.mainDisplayFrame, text='Please enter the ID of the tag(1, 2, 3, 4, ... etc.):', pady=50,font=self.txtBodyFormatting, justify='left').grid(column=0, row=2)
+        Label(master=self.mainDisplayFrame, text='Please enter the ID of the tag(1, 2, 3, 4, ... etc.):', pady=self.defaultPadY,font=self.txtBodyFormatting, justify='left').grid(column=0, row=2)
 
         self.arucoTagIDText = Entry(master=self.mainDisplayFrame, width = 10)
         self.arucoTagIDText.grid(column=1, row=2)
         
-        Label(master=self.mainDisplayFrame, text='Please enter the size of the tag:', pady=50,font=self.txtBodyFormatting).grid(column=0, row=3)
+        Label(master=self.mainDisplayFrame, text='Please enter the size of the tag:', pady=self.defaultPadY,font=self.txtBodyFormatting).grid(column=0, row=3)
 
         self.arucoTagSizeText = Entry(master=self.mainDisplayFrame, width = 10)
         self.arucoTagSizeText.grid(column=1, row=3)
@@ -192,7 +231,12 @@ class Gui:
         self.arucoTagSize = self.arucoTagSizeText.get()
         #GenerateTags()
 
-    def get_dirpath(self):
+    def get_tag_dirpath(self):
+        root = tk.Tk()
+        root.withdraw()
+        self.tagDirpath = filedialog.askdirectory()
+
+    def get_calib_dirpath(self):
         root = tk.Tk()
         root.withdraw()
         self.tagDirpath = filedialog.askdirectory()
@@ -201,41 +245,21 @@ class Gui:
     def draw_calibrate(self):
         self.mainDisplayFrame = tk.Frame(
             master=self.window,
-            width = 1200,
-            height= 800,
-            bg="dark olive green")
+            width = self.displayWidth,
+            height= self.displayHeight)
         self.mainDisplayFrame.pack()
 
-        Label(master=self.mainDisplayFrame, text='Please choose the directory where the ArUCo tag will be saved', pady=50,font=self.txtBodyFormatting).grid(column=0, row=0)
+        Label(master=self.mainDisplayFrame, text='Please choose the directory where the calibration images will be saved', pady=50,font=self.txtBodyFormatting).grid(column=0, row=0)
         Button(master=self.mainDisplayFrame, text="...", activebackground="gray99", activeforeground="gray50", font=self.txtBodyFormatting, command=self.get_dirpath ).grid(column=1, row=0)
         
 
-        Label(master=self.mainDisplayFrame, text='Please enter the ARuCo Dictionary:', pady=50,font=self.txtBodyFormatting).grid(column=0, row=1)
-
-        chosenDict = StringVar()
-        self.dictCB = ttk.Combobox(self.mainDisplayFrame, textvariable=chosenDict, width=20)
-        self.dictCB['values'] = [m for m in ARUCO_DICT]
-        self.dictCB['state'] = 'readonly'
-        self.dictCB.grid(column=1, row=1, ipadx=10)
-
-        Label(master=self.mainDisplayFrame, text='Please enter the ID of the tag(1, 2, 3, 4, ... etc.):', pady=50,font=self.txtBodyFormatting, justify='left').grid(column=0, row=2)
-
-        self.arucoTagIDText = Entry(master=self.mainDisplayFrame, width = 10)
-        self.arucoTagIDText.grid(column=1, row=2)
         
-        Label(master=self.mainDisplayFrame, text='Please enter the size of the tag:', pady=50,font=self.txtBodyFormatting).grid(column=0, row=3)
-
-        self.arucoTagSizeText = Entry(master=self.mainDisplayFrame, width = 10)
-        self.arucoTagSizeText.grid(column=1, row=3)
-
-        Button(master=self.mainDisplayFrame, text="Generate Tag", activebackground="gray99", activeforeground="gray50", font=self.txtBodyFormatting, command=self.generate_params ).grid(column=2, row=4, padx=20)
     
     def draw_detect(self):
         self.mainDisplayFrame = tk.Frame(
             master=self.window,
-            width = 1200,
-            height= 800,
-            bg="sienna1")
+            width = self.displayWidth,
+            height= self.displayHeight)
         self.mainDisplayFrame.pack()
 
 
